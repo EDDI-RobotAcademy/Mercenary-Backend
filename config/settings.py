@@ -13,6 +13,13 @@ class Settings(BaseSettings):
     REDIS_PASSWORD: str | None = None
     REDIS_DB: int = 0
 
+    # MySQL
+    MYSQL_HOST: str
+    MYSQL_PORT: int = 3306
+    MYSQL_USER: str
+    MYSQL_PASSWORD: str
+    MYSQL_DB: str
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
