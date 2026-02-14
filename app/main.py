@@ -1,10 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from config import load_env
 from kakao_authentication.controller.kakao_authentication_controller import kakao_authentication_router
-
-load_env()
 
 app = FastAPI(
     title="FastAPI Backend",
