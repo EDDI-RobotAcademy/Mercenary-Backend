@@ -25,6 +25,6 @@ def request_access_token_after_redirection(
     Depends(inject_kakao_authentication_service)
 ):
     try:
-        return kakao_service.request_access_token(code)
+        return kakao_service.login_with_kakao(code)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
