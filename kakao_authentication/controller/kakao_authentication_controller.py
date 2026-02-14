@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query, HTTPException
 
 from kakao_authentication.service.kakao_authentication_service_impl import KakaoAuthenticationServiceImpl
 
@@ -17,3 +17,14 @@ def request_oauth_link(
     return {
         "kakao_oauth_url": oauth_url
     }
+
+@kakao_authentication_router.get("/request-access-token-after-redirection")
+def request_access_token_after_redirection(
+    code: str = Query(...),
+    kakao_service: KakaoAuthenticationServiceImpl =
+    Depends(inject_kakao_authentication_service)
+):
+    try:
+        return kakao_service.request_access_token(code)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
