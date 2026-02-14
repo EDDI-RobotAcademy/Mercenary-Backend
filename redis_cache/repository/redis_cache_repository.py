@@ -5,7 +5,7 @@ from typing import Optional, Type, TypeVar
 T = TypeVar("T")
 
 
-class RedisCacheService(ABC):
+class RedisCacheRepository(ABC):
 
     @abstractmethod
     def set_key_and_value(self, key, value, ttl: Optional[timedelta] = None):

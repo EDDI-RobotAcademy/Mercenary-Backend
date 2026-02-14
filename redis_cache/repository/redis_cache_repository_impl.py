@@ -2,13 +2,12 @@ from datetime import timedelta
 from typing import Optional, Type, TypeVar
 
 from config.redis_config import RedisConfig
-from redis_cache.service.redis_cache_service import RedisCacheService
-
+from redis_cache.repository.redis_cache_repository import RedisCacheRepository
 
 T = TypeVar("T")
 
 
-class RedisCacheServiceImpl(RedisCacheService):
+class RedisCacheRepositoryImpl(RedisCacheRepository):
     _instance = None
     DEFAULT_TTL = timedelta(minutes=720)
 

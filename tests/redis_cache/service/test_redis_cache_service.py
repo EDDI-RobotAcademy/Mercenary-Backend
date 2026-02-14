@@ -3,12 +3,12 @@ from datetime import timedelta
 
 import pytest
 
-from redis_cache.service.redis_cache_service_impl import RedisCacheServiceImpl
+from redis_cache.repository.redis_cache_repository_impl import RedisCacheRepositoryImpl
 
 
 @pytest.fixture(scope="module")
 def redis_service():
-    service = RedisCacheServiceImpl.get_instance()
+    service = RedisCacheRepositoryImpl.get_instance()
     yield service
     # 테스트 종료 후 정리
     service.redis_client.flushdb()
