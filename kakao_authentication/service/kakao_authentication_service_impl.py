@@ -4,6 +4,7 @@ from kakao_authentication.repository.kakao_authentication_repository_impl import
 from kakao_authentication.service.kakao_authentication_service import (
     KakaoAuthenticationService,
 )
+from kakao_authentication.service.response.kakao_login_response import KakaoLoginResponse
 from kakao_authentication.service.response.kakao_token_response import KakaoTokenResponse
 
 
@@ -46,3 +47,25 @@ class KakaoAuthenticationServiceImpl(KakaoAuthenticationService):
         token_data = self.kakao_authentication_repository.request_access_token(code)
 
         return KakaoTokenResponse(**token_data)
+
+    def login_with_kakao(self, code: str) -> KakaoLoginResponse:
+        if not code:
+            raise ValueError("인가 코드가 필요합니다.")
+
+        token_data = self.kakao_authentication_repository.request_access_token(code)
+
+        access_token = token_data["access_token"]
+
+        user_data = self.kakao_authentication_repository.request_user_info(access_token)
+
+        kakao_account = user_data.get("kakao_account", {})
+        profile = kakao_account.get("profile", {})
+
+        return KakaoLoginResponse(
+            access_token=token_data["access_token"],
+            refresh_token=token_data["refresh_token"],
+            expires_in=token_data["expires_in"],
+            user_id=user_data["id"],
+            nickname=profile.get("nickname"),
+            email=kakao_account.get("email"),
+        )
