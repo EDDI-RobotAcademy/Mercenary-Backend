@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, Request
 
 from account.service.account_service_impl import AccountServiceImpl
-from account_profile.service.account_profile_service_impl import AccountProfileServiceImpl
 from authentication.service.authentication_service_impl import AuthenticationServiceImpl
 from account.domain.value_objects.email import Email
 from account.domain.value_objects.nickname import Nickname
@@ -15,9 +14,6 @@ def inject_auth_service() -> AuthenticationServiceImpl:
 
 def inject_account_service() -> AccountServiceImpl:
     return AccountServiceImpl.get_instance()
-
-def inject_account_profile_service() -> AccountProfileServiceImpl:
-    return AccountProfileServiceImpl.get_instance()
 
 
 @account_router.post("/sign-up")
