@@ -23,7 +23,7 @@ class AuthenticationServiceImpl(AuthenticationService):
             cls._instance = cls()
         return cls._instance
 
-    def create_session(self, account_id: str, kakao_access_token: str) -> str:
+    def create_session(self, account_id: int, kakao_access_token: str) -> str:
         user_token = str(uuid.uuid4())
 
         # Redis: userToken -> account_id
@@ -41,6 +41,14 @@ class AuthenticationServiceImpl(AuthenticationService):
         )
 
         return user_token
+
+    def validate_session(self, user_token: str) -> int | None:
+        account_id = self.redis.get_value_by_key(
+            f"session:{user_token}",
+            int
+        )
+
+        return account_id
 
     def create_temp_session(self, kakao_access_token: str) -> str:
         temp_token = str(uuid.uuid4())
