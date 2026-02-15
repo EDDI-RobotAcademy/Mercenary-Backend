@@ -33,3 +33,6 @@ class BoardRepositoryImpl(BoardRepository):
 
     def find_by_id(self, session: Session, board_id: int) -> Board | None:
         return session.get(Board, board_id)
+
+    def delete(self, session: Session, board: Board):
+        session.delete(board)

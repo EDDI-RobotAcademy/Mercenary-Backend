@@ -16,3 +16,7 @@ class BoardRepository(ABC):
     @abstractmethod
     def find_by_id(self, session: Session, board_id: int) -> Board | None:
         pass
+
+    @abstractmethod
+    def delete(self, session: Session, board: Board):
+        pass

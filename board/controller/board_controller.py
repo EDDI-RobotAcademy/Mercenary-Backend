@@ -133,3 +133,19 @@ def update_board(
 
     except PermissionError as e:
         raise HTTPException(status_code=403, detail=str(e))
+
+@board_router.delete("/delete/{board_id}")
+def delete_board(
+    board_id: int,
+    account_id: int = Depends(get_authenticated_account_id),
+    board_service: BoardServiceImpl = Depends(inject_board_service)
+):
+    try:
+        board_service.delete_board(board_id=board_id, account_id=account_id)
+        return {"board_id": board_id, "status": "deleted"}
+
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    except PermissionError as e:
+        raise HTTPException(status_code=403, detail=str(e))
