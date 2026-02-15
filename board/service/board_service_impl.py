@@ -1,3 +1,5 @@
+from typing import List, Any
+
 from sqlalchemy.orm import Session
 
 from account.domain.entity.account import Account
@@ -52,3 +54,16 @@ class BoardServiceImpl(BoardService):
 
         finally:
             session.close()
+
+    def list_boards(self, page: int = 1, page_size: int = 10) -> list[Board]:
+        if page < 1:
+            page = 1
+
+        offset = (page - 1) * page_size
+        session = MySQLConfig().get_session()
+        try:
+            boards = self.board_repository.find_all(session, offset=offset, limit=page_size)
+            return boards
+        finally:
+            session.close()
+

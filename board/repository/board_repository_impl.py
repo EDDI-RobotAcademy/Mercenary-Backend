@@ -21,3 +21,12 @@ class BoardRepositoryImpl(BoardRepository):
     def save(self, session: Session, board: Board) -> Board:
         session.add(board)
         return board
+
+    def find_all(self, session: Session, offset: int = 0, limit: int = 10) -> list[Board]:
+        return (
+            session.query(Board)
+            .order_by(Board.created_at.desc())  # 최신 글 먼저
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )

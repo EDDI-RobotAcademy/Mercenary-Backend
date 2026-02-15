@@ -1,4 +1,4 @@
-from fastapi import Cookie
+from fastapi import Cookie, Query
 from authentication.service.authentication_service_impl import AuthenticationServiceImpl
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -48,6 +48,36 @@ def create_board(
             "id": board.id,
             "title": board.title,
             "content": board.content,
+        }
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@board_router.get("/list")
+def list_boards(
+    page: int = Query(1, ge=1, description="페이지 번호, 1 이상"),
+    page_size: int = Query(10, ge=1, le=100, description="한 페이지 아이템 수"),
+    board_service: BoardServiceImpl = Depends(inject_board_service),
+):
+    try:
+        boards = board_service.list_boards(page=page, page_size=page_size)
+
+        # 응답 포맷
+        result = [
+            {
+                "id": board.id,
+                "title": board.title,
+                "content": board.content,
+                "author_id": board.account_id,
+                "created_at": board.created_at,
+            }
+            for board in boards
+        ]
+
+        return {
+            "page": page,
+            "page_size": page_size,
+            "boards": result,
         }
 
     except ValueError as e:
