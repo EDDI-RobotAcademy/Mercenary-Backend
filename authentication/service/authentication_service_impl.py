@@ -6,7 +6,9 @@ from redis_cache.repository.redis_cache_repository_impl import RedisCacheReposit
 
 class AuthenticationServiceImpl:
     _instance = None
+
     SESSION_TTL = timedelta(hours=1)
+    TEMP_SESSION_TTL = timedelta(minutes=5)
 
     def __new__(cls):
         if cls._instance is None:
@@ -20,15 +22,31 @@ class AuthenticationServiceImpl:
             cls._instance = cls()
         return cls._instance
 
-    def create_session(self, user_id: str) -> str:
-        # 유니크한 토큰 생성
+    def create_session(self, account_id: str, kakao_access_token: str) -> str:
         user_token = str(uuid.uuid4())
 
-        # Redis에 저장
+        # Redis: userToken -> account_id
         self.redis.set_key_and_value(
             key=f"session:{user_token}",
-            value=user_id,
+            value=account_id,
+            ttl=self.SESSION_TTL
+        )
+
+        # Redis: account_id -> kakao_access_token
+        self.redis.set_key_and_value(
+            key=f"account:{account_id}:kakao_token",
+            value=kakao_access_token,
             ttl=self.SESSION_TTL
         )
 
         return user_token
+
+    def create_temp_session(self, kakao_access_token: str) -> str:
+        temp_token = str(uuid.uuid4())
+        self.redis.set_key_and_value(
+            key=f"temp_session:{temp_token}",
+            value=kakao_access_token,
+            ttl=self.TEMP_SESSION_TTL
+        )
+        return temp_token
+
