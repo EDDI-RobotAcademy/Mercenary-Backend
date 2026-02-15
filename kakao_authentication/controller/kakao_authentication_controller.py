@@ -81,9 +81,10 @@ def request_access_token_after_redirection(
         )
 
         return {
-            "user_id": profile.account.id,
-            "email": email,
-            "nickname": nickname
+            "nickname": nickname.value,
+            "email": email.value,
+            "login_type": LoginType.KAKAO.value,
+            "is_temp_user": False
         }
 
     except ValueError as e:

@@ -50,3 +50,5 @@ class AuthenticationServiceImpl:
         )
         return temp_token
 
+    def delete_temp_session(self, temp_token: str):
+        self.redis.delete_by_key(f"temp_session:{temp_token}")
