@@ -4,6 +4,7 @@ from authentication.service.authentication_service_impl import AuthenticationSer
 from fastapi import APIRouter, Depends, HTTPException
 
 from board.controller.request.create_board_request import CreateBoardRequest
+from board.controller.request.update_board_request import UpdateBoardRequest
 from board.service.board_service_impl import BoardServiceImpl
 
 
@@ -24,7 +25,10 @@ def get_authenticated_account_id(
     if not userToken:
         raise HTTPException(status_code=401, detail="Authentication required")
 
+    print(f"userToken: {userToken}")
+
     account_id = auth_service.validate_session(userToken)
+    print(f"account_id: {account_id}")
 
     if not account_id:
         raise HTTPException(status_code=401, detail="Invalid or expired session")
@@ -100,3 +104,32 @@ def get_board(
 
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+@board_router.put("/update/{board_id}")
+def update_board(
+    board_id: int,
+    request: UpdateBoardRequest,
+    account_id: int = Depends(get_authenticated_account_id),
+    board_service: BoardServiceImpl = Depends(inject_board_service),
+):
+    try:
+        board = board_service.update_board(
+            account_id=account_id,
+            board_id=board_id,
+            title=request.title,
+            content=request.content
+        )
+        return {
+            "id": board.id,
+            "title": board.title,
+            "content": board.content,
+            "account_id": board.account_id,
+            "created_at": board.created_at,
+            "updated_at": board.updated_at
+        }
+
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    except PermissionError as e:
+        raise HTTPException(status_code=403, detail=str(e))

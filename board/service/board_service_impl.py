@@ -78,3 +78,30 @@ class BoardServiceImpl(BoardService):
 
         finally:
             session.close()
+
+    def update_board(self, account_id: int, board_id: int, title: str | None, content: str | None) -> Board:
+        session: Session = MySQLConfig().get_session()
+        try:
+            board = self.board_repository.find_by_id(session, board_id)
+            if not board:
+                raise ValueError("Board not found")
+
+            if board.account_id != account_id:
+                raise PermissionError("Not authorized to modify this board")
+
+            if title is not None:
+                board.title = title
+            if content is not None:
+                board.content = content
+
+            session.commit()
+            # refresh로 최신 상태 가져오기
+            session.refresh(board)
+            return board
+
+        except Exception:
+            session.rollback()
+            raise
+
+        finally:
+            session.close()
