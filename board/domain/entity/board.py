@@ -23,6 +23,7 @@ class Board(Base):
     )
 
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)  # 추가
 
     account = relationship("Account", lazy="select")
 
