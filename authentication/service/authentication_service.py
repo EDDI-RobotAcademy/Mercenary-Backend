@@ -14,3 +14,7 @@ class AuthenticationService(ABC):
     @abstractmethod
     def delete_temp_session(self, temp_token: str):
         pass
+
+    @abstractmethod
+    def get_temp_session(self, temp_token: str) -> str | None:
+        pass
