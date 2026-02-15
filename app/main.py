@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from account.controller.account_controller import account_router
+from board.controller.board_controller import board_router
 
 from config.mysql_config import MySQLConfig
 from kakao_authentication.controller.kakao_authentication_controller import kakao_authentication_router
@@ -23,6 +24,7 @@ app.add_middleware(
 
 app.include_router(kakao_authentication_router)
 app.include_router(account_router)
+app.include_router(board_router)
 
 if __name__ == "__main__":
     import uvicorn
@@ -30,7 +32,7 @@ if __name__ == "__main__":
     Base = MySQLConfig().get_base()
     engine = MySQLConfig().get_engine()
 
-    Base.metadata.drop_all(bind=engine)
+    # Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
 
     uvicorn.run(app, host="0.0.0.0", port=33333)
