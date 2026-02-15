@@ -24,7 +24,8 @@ class MySQLConfig:
 
         self._url = f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}"
         self._engine = create_engine(self._url, echo=True, pool_pre_ping=True)
-        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self._engine)
+        self.SessionLocal = sessionmaker(
+            autocommit=False, autoflush=False, expire_on_commit=False, bind=self._engine)
         self.Base = declarative_base()
 
     def get_engine(self):
