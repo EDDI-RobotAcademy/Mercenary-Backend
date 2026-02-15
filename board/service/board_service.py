@@ -21,3 +21,7 @@ class BoardService(ABC):
     @abstractmethod
     def update_board(self, account_id: int, board_id: int, title: str | None, content: str | None) -> Board:
         pass
+
+    @abstractmethod
+    def delete_board(self, board_id: int, account_id: int):
+        pass

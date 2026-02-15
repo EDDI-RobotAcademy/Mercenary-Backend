@@ -105,3 +105,23 @@ class BoardServiceImpl(BoardService):
 
         finally:
             session.close()
+
+    def delete_board(self, board_id: int, account_id: int):
+        session: Session = MySQLConfig().get_session()
+        try:
+            board = self.board_repository.find_by_id(session, board_id)
+            if not board:
+                raise ValueError(f"Board with ID {board_id} not found")
+
+            if board.account_id != account_id:
+                raise PermissionError("You are not allowed to delete this board")
+
+            self.board_repository.delete(session, board)
+            session.commit()
+
+        except:
+            session.rollback()
+            raise
+
+        finally:
+            session.close()
