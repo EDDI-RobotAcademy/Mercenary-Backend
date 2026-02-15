@@ -20,7 +20,7 @@ class MySQLConfig:
         password = urllib.parse.quote_plus(os.getenv("MYSQL_PASSWORD", ""))
         host = os.getenv("MYSQL_HOST", "localhost")
         port = os.getenv("MYSQL_PORT")
-        db = os.getenv("MYSQL_DATABASE")
+        db = os.getenv("MYSQL_DB")
 
         self._url = f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}"
         self._engine = create_engine(self._url, echo=True, pool_pre_ping=True)

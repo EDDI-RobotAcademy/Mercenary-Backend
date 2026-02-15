@@ -1,10 +1,11 @@
 from datetime import timedelta
 import uuid
 
+from authentication.service.authentication_service import AuthenticationService
 from redis_cache.repository.redis_cache_repository_impl import RedisCacheRepositoryImpl
 
 
-class AuthenticationServiceImpl:
+class AuthenticationServiceImpl(AuthenticationService):
     _instance = None
 
     SESSION_TTL = timedelta(hours=1)
