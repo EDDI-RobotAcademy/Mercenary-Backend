@@ -10,3 +10,7 @@ class AuthenticationService(ABC):
     @abstractmethod
     def create_temp_session(self, kakao_access_token: str) -> str:
         pass
+
+    @abstractmethod
+    def delete_temp_session(self, temp_token: str):
+        pass
