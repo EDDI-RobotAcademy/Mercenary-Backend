@@ -42,5 +42,5 @@ class AccountRepositoryImpl(AccountRepository):
                 Account.login_type == login_type,
                 AccountProfile.email == email.value
             )
-            .one_or_none()
+            .first()
         )
