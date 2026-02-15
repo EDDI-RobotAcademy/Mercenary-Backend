@@ -12,3 +12,7 @@ class BoardRepository(ABC):
     @abstractmethod
     def find_all(self, session: Session, offset: int = 0, limit: int = 10) -> list[Board]:
         pass
+
+    @abstractmethod
+    def find_by_id(self, session: Session, board_id: int) -> Board | None:
+        pass
