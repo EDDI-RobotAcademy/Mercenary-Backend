@@ -74,8 +74,13 @@ class AccountServiceImpl(AccountService):
                 login_type
             )
 
-            if account:
-                _ = account.profile.email  # Lazy 안전
+            if account and account.profile:
+                # Lazy load 트리거
+                _ = account.profile.email
+                _ = account.profile.nickname
+
+                account.profile.email = Email(account.profile.email)
+                account.profile.nickname = Nickname(account.profile.nickname)
 
             return account
 
