@@ -82,3 +82,21 @@ def list_boards(
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@board_router.get("/{board_id}")
+def get_board(
+    board_id: int,
+    board_service: BoardServiceImpl = Depends(inject_board_service),
+):
+    try:
+        board = board_service.read_board(board_id)
+        return {
+            "id": board.id,
+            "title": board.title,
+            "content": board.content,
+            "account_id": board.account_id,
+            "created_at": board.created_at,
+        }
+
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))

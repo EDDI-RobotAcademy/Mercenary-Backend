@@ -30,3 +30,6 @@ class BoardRepositoryImpl(BoardRepository):
             .limit(limit)
             .all()
         )
+
+    def find_by_id(self, session: Session, board_id: int) -> Board | None:
+        return session.get(Board, board_id)

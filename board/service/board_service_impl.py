@@ -67,3 +67,14 @@ class BoardServiceImpl(BoardService):
         finally:
             session.close()
 
+    def read_board(self, board_id: int) -> Board:
+        session: Session = MySQLConfig().get_session()
+        try:
+            board = self.board_repository.find_by_id(session, board_id)
+            if not board:
+                raise ValueError("Board not found")
+
+            return board
+
+        finally:
+            session.close()

@@ -13,3 +13,7 @@ class BoardService(ABC):
     @abstractmethod
     def list_boards(self, page: int = 1, page_size: int = 10) -> list[Board]:
         pass
+
+    @abstractmethod
+    def read_board(self, board_id: int) -> Board:
+        pass
