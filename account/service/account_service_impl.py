@@ -1,7 +1,10 @@
+from typing import Optional
+
 from sqlalchemy.orm import Session
 
 from account.domain.entity.account import Account
 from account.domain.value_objects.email import Email
+from account.domain.value_objects.login_type import LoginType
 from account.domain.value_objects.nickname import Nickname
 from account.repository.account_repository_impl import AccountRepositoryImpl
 from account.service.account_service import AccountService
@@ -52,6 +55,29 @@ class AccountServiceImpl(AccountService):
         except Exception:
             session.rollback()
             raise
+
+        finally:
+            session.close()
+
+    def find_by_email_and_login_type(
+            self,
+            email: Email,
+            login_type: LoginType
+    ) -> Optional[Account]:
+
+        session = MySQLConfig().get_session()
+
+        try:
+            account = self.account_repository.find_by_email_and_login_type(
+                session,
+                email,
+                login_type
+            )
+
+            if account:
+                _ = account.profile.email  # Lazy 안전
+
+            return account
 
         finally:
             session.close()
