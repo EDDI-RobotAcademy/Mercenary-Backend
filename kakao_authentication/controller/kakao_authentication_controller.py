@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Query, HTTPException, Response
 
 from account.domain.value_objects.login_type import LoginType
-from account_profile.domain.value_objects.email import Email
-from account_profile.domain.value_objects.nickname import Nickname
+from account.domain.value_objects.email import Email
+from account.domain.value_objects.nickname import Nickname
 from account_profile.service.account_profile_service_impl import AccountProfileServiceImpl
 from authentication.service.authentication_service_impl import AuthenticationServiceImpl
 from kakao_authentication.service.kakao_authentication_service_impl import KakaoAuthenticationServiceImpl
