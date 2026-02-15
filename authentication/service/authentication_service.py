@@ -4,7 +4,11 @@ from abc import ABC, abstractmethod
 class AuthenticationService(ABC):
 
     @abstractmethod
-    def create_session(self, account_id: str, kakao_access_token: str) -> str:
+    def create_session(self, account_id: int, kakao_access_token: str) -> str:
+        pass
+
+    @abstractmethod
+    def validate_session(self, user_token: str) -> int | None:
         pass
 
     @abstractmethod
