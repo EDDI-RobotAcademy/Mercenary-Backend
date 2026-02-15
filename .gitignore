@@ -402,3 +402,6 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm,pycharm+iml,pycharm+all
+
+# exclude .env
+.env
