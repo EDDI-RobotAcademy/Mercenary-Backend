@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     MYSQL_PASSWORD: str
     MYSQL_DB: str
 
+    # CORS
+    CORS_ALLOWED_ORIGINS: list[str]
+    FRONTEND_URL: str
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

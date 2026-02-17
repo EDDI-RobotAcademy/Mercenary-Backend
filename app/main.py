@@ -5,7 +5,10 @@ from account.controller.account_controller import account_router
 from board.controller.board_controller import board_router
 
 from config.mysql_config import MySQLConfig
+from config.settings import get_settings
 from kakao_authentication.controller.kakao_authentication_controller import kakao_authentication_router
+
+settings = get_settings()
 
 app = FastAPI(
     title="FastAPI Backend",
@@ -16,7 +19,7 @@ app = FastAPI(
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 프로덕션에서는 특정 도메인만 허용하도록 변경
+    allow_origins=settings.CORS_ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
