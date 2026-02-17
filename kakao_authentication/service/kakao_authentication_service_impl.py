@@ -1,4 +1,10 @@
 from urllib.parse import urlencode
+
+from account.domain.entity.account import Account
+from account.domain.entity.account_profile import AccountProfile
+from account.domain.value_objects.email import Email
+from account.domain.value_objects.login_type import LoginType
+from account.domain.value_objects.nickname import Nickname
 from config.settings import get_settings
 from kakao_authentication.repository.kakao_authentication_repository_impl import KakaoAuthenticationRepositoryImpl
 from kakao_authentication.service.kakao_authentication_service import (
@@ -47,6 +53,27 @@ class KakaoAuthenticationServiceImpl(KakaoAuthenticationService):
         token_data = self.kakao_authentication_repository.request_access_token(code)
 
         return KakaoTokenResponse(**token_data)
+
+    def get_user_info(self, access_token: str) -> Account:
+        user_info = self.kakao_authentication_repository.request_user_info(access_token)
+
+        kakao_account = user_info.get("kakao_account", {})
+        profile_info = kakao_account.get("profile", {})
+
+        nickname = profile_info.get("nickname")
+        email = kakao_account.get("email")
+
+        if not nickname or not email:
+            raise ValueError("Kakao 사용자 정보가 올바르지 않습니다.")
+
+        return Account(
+            id=None,
+            profile=AccountProfile(
+                nickname=Nickname(nickname),
+                email=Email(email),
+            ),
+            login_type=LoginType.KAKAO,
+        )
 
     def login_with_kakao(self, code: str) -> KakaoLoginResponse:
         if not code:
