@@ -45,7 +45,9 @@ def request_access_token_after_redirection(
         # Kakao API로 로그인 & 사용자 정보 조회
         kakao_user_info = kakao_service.login_with_kakao(code)
         email = Email(kakao_user_info.email)
-        nickname = Nickname(kakao_user_info.nickname)
+
+        print(type(kakao_user_info))
+        print(kakao_user_info)
 
         # Account 조회: 기존 회원인지 확인
         account = account_service.find_by_email_and_login_type(
@@ -53,9 +55,17 @@ def request_access_token_after_redirection(
             login_type=LoginType.KAKAO.value
         )
 
+        print("Account:", account)
+
+        settings = get_settings()
+
         if account is None:
             temp_token = auth_service.create_temp_session(
                 kakao_user_info.access_token
+            )
+
+            response = RedirectResponse(
+                url=f"{settings.FRONTEND_URL}/signup"
             )
 
             response.set_cookie(
@@ -69,13 +79,7 @@ def request_access_token_after_redirection(
                 )
             )
 
-            return {
-                "temp_token": temp_token,
-                "nickname": nickname.value,
-                "email": email.value,
-                "login_type": LoginType.KAKAO.value,
-                "is_temp_user": True
-            }
+            return response
 
         account_id = account.id
 
@@ -84,8 +88,6 @@ def request_access_token_after_redirection(
             account_id,
             kakao_user_info.access_token
         )
-
-        settings = get_settings()
 
         response = RedirectResponse(settings.FRONTEND_URL)
         response.set_cookie(
