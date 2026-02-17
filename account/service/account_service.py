@@ -23,3 +23,7 @@ class AccountService(ABC):
             self, email: Email, login_type: LoginType
     ) -> Optional[Account]:
         pass
+
+    @abstractmethod
+    def lookup(self, account_id: int) -> Account:
+        pass

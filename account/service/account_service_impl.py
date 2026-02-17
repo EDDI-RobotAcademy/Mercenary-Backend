@@ -86,3 +86,29 @@ class AccountServiceImpl(AccountService):
 
         finally:
             session.close()
+
+    def lookup(self, account_id: int) -> Account:
+
+        session = MySQLConfig().get_session()
+
+        try:
+            account = self.account_repository.find_by_id(
+                session,
+                account_id
+            )
+
+            if not account:
+                raise ValueError(f"Account not found. id={account_id}")
+
+            # Lazy loading 안전 확보
+            if account.profile:
+                _ = account.profile.email
+                _ = account.profile.nickname
+
+                account.profile.email = Email(account.profile.email)
+                account.profile.nickname = Nickname(account.profile.nickname)
+
+            return account
+
+        finally:
+            session.close()

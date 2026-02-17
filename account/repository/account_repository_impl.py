@@ -28,6 +28,18 @@ class AccountRepositoryImpl(AccountRepository):
         session.add(account)
         return account
 
+    def find_by_id(
+            self,
+            session: Session,
+            account_id: int
+    ) -> Optional[Account]:
+
+        return (
+            session.query(Account)
+            .filter(Account.id == account_id)
+            .first()
+        )
+
     def find_by_email_and_login_type(
         self,
         session: Session,
