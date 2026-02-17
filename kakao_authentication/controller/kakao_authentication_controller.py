@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, Query, HTTPException, Response
+from starlette.responses import RedirectResponse
 
 from account.domain.value_objects.login_type import LoginType
 from account.domain.value_objects.email import Email
 from account.domain.value_objects.nickname import Nickname
 from account.service.account_service_impl import AccountServiceImpl
 from authentication.service.authentication_service_impl import AuthenticationServiceImpl
+from config.settings import get_settings
 from kakao_authentication.service.kakao_authentication_service_impl import KakaoAuthenticationServiceImpl
 
 kakao_authentication_router = APIRouter(prefix="/kakao-authentication")
@@ -25,9 +27,11 @@ def request_oauth_link(
 ):
     oauth_url = kakao_service.generate_oauth_url()
 
-    return {
-        "kakao_oauth_url": oauth_url
-    }
+    # return {
+    #     "kakao_oauth_url": oauth_url
+    # }
+
+    return RedirectResponse(oauth_url)
 
 @kakao_authentication_router.get("/request-access-token-after-redirection")
 def request_access_token_after_redirection(
@@ -81,6 +85,9 @@ def request_access_token_after_redirection(
             kakao_user_info.access_token
         )
 
+        settings = get_settings()
+
+        response = RedirectResponse(settings.FRONTEND_URL)
         response.set_cookie(
             key="userToken",
             value=user_token,
@@ -90,12 +97,7 @@ def request_access_token_after_redirection(
             max_age=3600
         )
 
-        return {
-            "nickname": account.profile.nickname.value,
-            "email": account.profile.email.value,
-            "login_type": LoginType.KAKAO.value,
-            "is_temp_user": False
-        }
+        return response
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
