@@ -14,6 +14,14 @@ class AccountRepository(ABC):
         pass
 
     @abstractmethod
+    def find_by_id(
+            self,
+            session: Session,
+            account_id: int
+    ) -> Optional[Account]:
+        pass
+
+    @abstractmethod
     def find_by_email_and_login_type(
             self, session: Session, email: str, login_type: LoginType
     ) -> Optional[Account]:
