@@ -32,38 +32,60 @@ def get_authentication_status(
     # 정회원 세션 확인
     if userToken:
         account_id = auth_service.validate_session(userToken)
-
         if not account_id:
-            raise HTTPException(status_code=401, detail="Invalid or expired session")
+            return {
+                "logged_in": False,
+                "is_temp_user": False,
+                "email": None,
+                "nickname": None,
+                "login_type": None,
+            }
 
         account = account_service.lookup(account_id)
-
         if not account:
-            raise HTTPException(status_code=401, detail="Account not found")
+            return {
+                "logged_in": False,
+                "is_temp_user": False,
+                "email": None,
+                "nickname": None,
+                "login_type": None,
+            }
 
         return {
-            "nickname": account.profile.nickname.value,
-            "email": account.profile.email.value,
-            "login_type": account.login_type.value,
+            "logged_in": True,
             "is_temp_user": False,
+            "email": account.profile.email.value,
+            "nickname": account.profile.nickname.value,
+            "login_type": account.login_type.value,
         }
 
     # 임시 세션 확인
     if tempToken:
         kakao_access_token = auth_service.get_temp_session(tempToken)
-
         if not kakao_access_token:
-            raise HTTPException(status_code=401, detail="Invalid or expired temp session")
+            return {
+                "logged_in": False,
+                "is_temp_user": False,
+                "email": None,
+                "nickname": None,
+                "login_type": None,
+            }
 
-        # Kakao API 통해 사용자 정보 조회
         account = kakao_service.get_user_info(kakao_access_token)
 
         return {
-            "nickname": account.profile.nickname.value,
-            "email": account.profile.email.value,
-            "login_type": account.login_type.value,
+            "logged_in": False,
             "is_temp_user": True,
+            "email": account.profile.email.value,
+            "nickname": account.profile.nickname.value,
+            "login_type": account.login_type.value,
         }
 
-    # 쿠키 없음
-    raise HTTPException(status_code=401, detail="Not authenticated")
+    # 쿠키 없음 → 로그인 안됨
+    return {
+        "logged_in": False,
+        "is_temp_user": False,
+        "email": None,
+        "nickname": None,
+        "login_type": None,
+    }
