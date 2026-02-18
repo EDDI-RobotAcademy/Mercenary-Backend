@@ -59,6 +59,14 @@ async def signup(
     # temp 세션 제거
     auth_service.delete_temp_session(temp_token)
 
+    response.delete_cookie(
+        key="tempToken",
+        path="/",
+        httponly=True,
+        secure=True,
+        samesite="lax"
+    )
+
     # user 세션 발급
     user_token = auth_service.create_session(
         account.id,
