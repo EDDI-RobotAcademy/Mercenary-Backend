@@ -66,22 +66,10 @@ def list_boards(
     try:
         boards = board_service.list_boards(page=page, page_size=page_size)
 
-        # 응답 포맷
-        result = [
-            {
-                "id": board.id,
-                "title": board.title,
-                "content": board.content,
-                "author_id": board.account_id,
-                "created_at": board.created_at,
-            }
-            for board in boards
-        ]
-
         return {
             "page": page,
             "page_size": page_size,
-            "boards": result,
+            **boards
         }
 
     except ValueError as e:
