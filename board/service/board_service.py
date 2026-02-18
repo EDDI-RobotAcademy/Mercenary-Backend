@@ -25,3 +25,7 @@ class BoardService(ABC):
     @abstractmethod
     def delete_board(self, board_id: int, account_id: int):
         pass
+
+    @abstractmethod
+    def count_boards(self) -> int:
+        pass

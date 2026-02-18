@@ -36,3 +36,6 @@ class BoardRepositoryImpl(BoardRepository):
 
     def delete(self, session: Session, board: Board):
         session.delete(board)
+
+    def count_all(self, session: Session) -> int:
+        return session.query(Board).count()
