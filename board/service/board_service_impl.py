@@ -55,15 +55,25 @@ class BoardServiceImpl(BoardService):
         finally:
             session.close()
 
-    def list_boards(self, page: int = 1, page_size: int = 10) -> list[Board]:
-        if page < 1:
-            page = 1
-
+    def list_boards(self, page: int = 1, page_size: int = 10) -> dict:
         offset = (page - 1) * page_size
         session = MySQLConfig().get_session()
+
         try:
             boards = self.board_repository.find_all(session, offset=offset, limit=page_size)
-            return boards
+            result = [
+                {
+                    "id": b.id,
+                    "title": b.title,
+                    "content": b.content,
+                    "author_nickname": b.account.profile.nickname,  # 세션 살아 있는 동안 접근
+                    "created_at": b.created_at,
+                }
+                for b in boards
+            ]
+            total = self.board_repository.count_all(session)
+            return {"boards": result, "total": total}
+
         finally:
             session.close()
 

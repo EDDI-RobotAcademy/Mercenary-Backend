@@ -11,7 +11,7 @@ class BoardService(ABC):
         pass
 
     @abstractmethod
-    def list_boards(self, page: int = 1, page_size: int = 10) -> list[Board]:
+    def list_boards(self, page: int = 1, page_size: int = 10) -> dict:
         pass
 
     @abstractmethod
