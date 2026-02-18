@@ -65,7 +65,7 @@ def request_access_token_after_redirection(
             )
 
             response = RedirectResponse(
-                url=f"{settings.FRONTEND_URL}/signup"
+                url=f"{settings.FRONTEND_URL}/account/signup"
             )
 
             response.set_cookie(
