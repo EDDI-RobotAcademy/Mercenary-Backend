@@ -125,3 +125,10 @@ class BoardServiceImpl(BoardService):
 
         finally:
             session.close()
+
+    def count_boards(self) -> int:
+        session = MySQLConfig().get_session()
+        try:
+            return self.board_repository.count_all(session)
+        finally:
+            session.close()

@@ -20,3 +20,7 @@ class BoardRepository(ABC):
     @abstractmethod
     def delete(self, session: Session, board: Board):
         pass
+
+    @abstractmethod
+    def count_all(self, session: Session) -> int:
+        pass
